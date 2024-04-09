@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 00:58:48 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/09 14:38:25 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/09 22:43:42 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,5 +119,3 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (line);
 }
-
-

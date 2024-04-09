@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/09 20:57:29 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/09 22:46:50 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@ char	*print_message(char *str)
 /* Handle the signal recived and acts depending on which one is received */
 void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 {
-	static int				i;
-	static unsigned char	bit;
-	static unsigned char	c;
-	static char	*message = 0;
+	static int				i = 0;
+	static int				pid = 0;
+	static char				*message = 0;
+	static unsigned char	bit = 0;
+	static unsigned char	c = 0;
 
 	(void)ucontext;
-	(void)info;
+	if (info->si_pid)
+		pid = info->si_pid;
 	if (signum == SIGUSR2)
 	{
 		bit = 1 << i;
@@ -45,11 +47,12 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 	{
 		if (c)
 			message = ft_str_add_char(message, c);
-		else 
-			message = print_message(message);
 		i = 0;
 		c = 0;
 	}
+	message = print_message(message);
+	if (kill(pid, SIGUSR1) == -1)
+		write(1, "problema server", 15);
 }
 
 int	main(void)

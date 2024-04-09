@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:27:01 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/08 14:38:44 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/09 22:44:23 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*add_str(char *str, size_t len, size_t index)
 }
 
 /* checks if there are more string after a new line and saves it in the list */
-static  void	extra_str(t_list **list, size_t index)
+static void	extra_str(t_list **list, size_t index)
 {
 	char	*new_str;
 	size_t	len;
