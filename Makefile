@@ -6,7 +6,7 @@
 #    By: lcarrizo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 13:05:39 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/08 15:06:14 by lcarrizo         ###   ########.fr        #
+#    Updated: 2024/04/09 15:18:44 by lcarrizo         ###    ###london.com     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,14 +20,14 @@ LIBFT_DIR		= lib/libft/
 INCLUDE			= include/
 UTILS_SRC		= utils/
 SRC_DIR			= src/
-OBJ_DIR			= obj/
+OBJ_DIR			= .obj/
 
 # for server #
-SRCS_SERVER		= $(wildcard $(SRC_DIR)server/*.c)
+SRCS_SERVER		= $(wildcard $(SRC_DIR)server_src/*.c)
 OBJ_SERVER		= $(addprefix $(OBJ_DIR)server/, $(notdir $(SRCS_SERVER:.c=.o)))
 
 # for client #
-SRCS_CLIENT		= $(wildcard $(SRC_DIR)client/*.c)
+SRCS_CLIENT		= $(wildcard $(SRC_DIR)client_src/*.c)
 OBJ_CLIENT		= $(addprefix $(OBJ_DIR)client/, $(notdir $(SRCS_CLIENT:.c=.o)))
 
 #############################    COMMANDS   ##################################
@@ -56,12 +56,12 @@ $(NAME_CLIENT):		$(OBJ_CLIENT)
 			$(CC) $(CFLAGS) $(OBJ_CLIENT) -o $(NAME_CLIENT) $(LIBFT) -g
 			@echo "\nClient executable created!\n"
 
-$(OBJ_DIR)server/%.o:	$(SRC_DIR)server/%.c
+$(OBJ_DIR)server/%.o:	$(SRC_DIR)server_src/%.c
 			@mkdir -p $(OBJ_DIR)/server
 			@echo "\nObject Server Directory Created!\n"
 			$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ_DIR)client/%.o:	$(SRC_DIR)client/%.c
+$(OBJ_DIR)client/%.o:	$(SRC_DIR)client_src/%.c
 			@mkdir -p $(OBJ_DIR)/client
 			@echo "\nObject Client Directory Created!\n"
 			$(CC) $(CFLAGS) -c $< -o $@
