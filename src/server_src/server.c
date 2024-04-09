@@ -6,18 +6,27 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/09 17:12:45 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/09 20:57:29 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
 
+/**/
+char	*print_message(char *str)
+{
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (NULL);
+}
+
 /* Handle the signal recived and acts depending on which one is received */
 void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 {
 	static int				i;
-	unsigned char	bit;
+	static unsigned char	bit;
 	static unsigned char	c;
+	static char	*message = 0;
 
 	(void)ucontext;
 	(void)info;
@@ -26,10 +35,18 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 		bit = 1 << i;
 		c += bit;
 	}
+	else if (signum == SIGUSR1)
+	{
+		bit = 0 << i;
+		c += bit;
+	}
 	i++;
 	if (i == 8)
 	{
-		write(1, &c, 1);
+		if (c)
+			message = ft_str_add_char(message, c);
+		else 
+			message = print_message(message);
 		i = 0;
 		c = 0;
 	}

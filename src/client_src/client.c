@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/09 17:09:03 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/09 20:26:28 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ static void	char_to_bin(char c, int nbr[])
 
 }
 
+/* send a NULL carcter represented as a binary number */
 static void	send_null(int pid)
 {
 	int	i;
 
 	i = -1;
 	while (++i < 8)
-		if (kill(pid, SIGUSR1) == -1)
+		if (kill(pid, SIGUSR1) == - 1)
 			return ;
 }
 
@@ -58,7 +59,7 @@ static void	sent_message(char *message, int pid)
 				kill(pid, SIGUSR1);
 			else if (nbr[j] == 1)
 				kill(pid, SIGUSR2);
-			usleep(150);
+			usleep(1500);
 		}
 		i++;
 		if (str[i] == '\0')
