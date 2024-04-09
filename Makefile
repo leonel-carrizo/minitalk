@@ -6,7 +6,7 @@
 #    By: lcarrizo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 13:05:39 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/09 15:18:44 by lcarrizo         ###    ###london.com     #
+#    Updated: 2024/04/09 15:20:34 by lcarrizo         ###    ###london.com     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,20 +50,20 @@ $(NAME):		$(NAME)
 
 $(NAME_SERVER):		$(OBJ_SERVER)
 			$(CC) $(CFLAGS) $(OBJ_SERVER) -o $(NAME_SERVER) $(LIBFT) -g
-			@echo "\nServer executable created!\n"
+			@echo "Server executable created!"
 
 $(NAME_CLIENT):		$(OBJ_CLIENT)
 			$(CC) $(CFLAGS) $(OBJ_CLIENT) -o $(NAME_CLIENT) $(LIBFT) -g
-			@echo "\nClient executable created!\n"
+			@echo "Client executable created!"
 
 $(OBJ_DIR)server/%.o:	$(SRC_DIR)server_src/%.c
 			@mkdir -p $(OBJ_DIR)/server
-			@echo "\nObject Server Directory Created!\n"
+			@echo "Object Server Directory Created!"
 			$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)client/%.o:	$(SRC_DIR)client_src/%.c
 			@mkdir -p $(OBJ_DIR)/client
-			@echo "\nObject Client Directory Created!\n"
+			@echo "Object Client Directory Created!"
 			$(CC) $(CFLAGS) -c $< -o $@
 
 # create a program which can be debugged with gdb.
@@ -75,13 +75,13 @@ debug:			$(LIBFT)
 clean:		
 			$(RM) $(OBJ_DIR)
 			@make -C $(LIBFT_DIR) clean
-			@echo "\n** clean minitalk done!**\n"
+			@echo "** clean minitalk done!**"
 			
 fclean:			clean
 			$(RM) $(NAME_SERVER) $(NAME_CLIENT)
 			$(RM) ./libft.a
 			@make -C $(LIBFT_DIR) fclean
-			@echo "\n** full clean minitalk done!**\n"
+			@echo "** full clean minitalk done!**"
 
 re:			fclean all
 

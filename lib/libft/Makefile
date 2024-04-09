@@ -6,7 +6,7 @@
 #    By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/28 03:19:48 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/08 15:07:08 by lcarrizo         ###   ########.fr        #
+#    Updated: 2024/04/09 15:21:13 by lcarrizo         ###    ###london.com     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,11 +36,11 @@ all:		$(NAME)
 
 $(NAME):	$(OBJ)
 		$(AR) $(NAME) $(OBJ)
-		@echo "\n$(notdir $@) created\n"
+		@echo "$(notdir $@) created"
 
 $(OBJ_DIR):	
 		@mkdir -p $(OBJ_DIR)
-		@echo "\nCompailing libft...\n"	
+		@echo "Compailing libft..."	
 
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c | $(OBJ_DIR)
 		$(CC) $(CFLAGS) $(OPT) $< -o $@
@@ -53,11 +53,11 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)get_next_line/%.c | $(OBJ_DIR)
 
 clean:		
 		$(RM) $(OBJ_DIR) 
-		@echo "\n* LIBFT  Object files deleted! *\n"
+		@echo "* LIBFT  Object files deleted! *"
 
 fclean:		clean
 		$(RM) $(NAME)
-		@echo "\n** LIBFT FULL CLEAN done! **\n"
+		@echo "** LIBFT FULL CLEAN done! **"
 
 re:		fclean all
 
