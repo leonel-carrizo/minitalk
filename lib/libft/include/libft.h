@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 21:08:46 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/09 18:28:53 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/13 19:41:55 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ long		ft_atol(const char *nbr);
 size_t		ft_strlen(const char *s);
 size_t		ft_strlcpy(char *dst, const char *src, size_t size);
 size_t		ft_strlcat(char *dst, const char *src, size_t size);
+char		*ft_strncpy(char *dst, char *src, size_t n);
 char		*ft_strchr(const char *s, int c);
 char		*ft_strnstr(const char *big, const char *small, size_t len);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
