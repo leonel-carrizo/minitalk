@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/09 22:51:31 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/13 22:39:25 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	sent_message(char *message, int pid)
 	if (!str)
 		return ;
 	i = -1;
-	while (str[++i])
+	while (str[++i] )
 	{
 		char_to_bin(str[i], nbr);
 		j = -1;
@@ -66,8 +66,9 @@ static void	sent_message(char *message, int pid)
 }
 
 void	handler_sig_client(int signum)
-{
-	(void)signum;
+{ 
+ 	(void)signum;
+	ft_printf("recibido, ");
 }
 
 int	main(int argc, char *argv[])
@@ -84,5 +85,7 @@ int	main(int argc, char *argv[])
 	pid = ft_atoi(argv[1]);
 	message = argv[2];
 	sent_message(message, pid);
+//	while (1)
+//		pause();
 	return (EXIT_SUCCESS);
 }
