@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/13 22:39:25 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:36:10 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	char_to_bin(char c, int nbr[])
 	int	i;
 
 	i = 0;
-	while (i <= 7)
+	while (i < 8)
 	{
 		nbr[i] = (c >> i) & 1;
 		i++;
@@ -32,8 +32,11 @@ static void	send_null(int pid)
 
 	i = -1;
 	while (++i < 8)
+	{
 		if (kill(pid, SIGUSR1) == -1)
 			return ;
+		usleep(2000);
+	}
 }
 
 /* convert the message to binary and send a signal to the server bit to bit */
@@ -42,24 +45,23 @@ static void	sent_message(char *message, int pid)
 	int			nbr[8];
 	int			j;
 	static int	i;
-	char	*str;
+	static char	*str;
 
 	str = message;
-	if (!str)
-		return ;
-	i = -1;
-	while (str[++i] )
+	i = 0;
+	while (str[i])
 	{
 		char_to_bin(str[i], nbr);
 		j = -1;
-		while (++j <= 7)
+		while (++j < 8)
 		{
 			if (nbr[j] == 0)
 				kill(pid, SIGUSR1);
 			else if (nbr[j] == 1)
 				kill(pid, SIGUSR2);
-			usleep(20);
+			usleep(1000);
 		}
+		i++;
 		if (str[i] == '\0')
 			send_null(pid);
 	}
@@ -67,7 +69,7 @@ static void	sent_message(char *message, int pid)
 
 void	handler_sig_client(int signum)
 { 
- 	(void)signum;
+	(void)signum;
 	ft_printf("recibido, ");
 }
 
@@ -85,7 +87,7 @@ int	main(int argc, char *argv[])
 	pid = ft_atoi(argv[1]);
 	message = argv[2];
 	sent_message(message, pid);
-//	while (1)
-//		pause();
+	//	while (1)
+	//		pause();
 	return (EXIT_SUCCESS);
 }

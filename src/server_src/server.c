@@ -6,36 +6,35 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/13 22:54:43 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/15 23:23:58 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
 
-static void	add_char(char c, char **str, size_t n_sig)
+static void	add_char(char c, char **str)
 {
-	int	len;
+	static int	len = 0;
+	int		i;
+	int		j;
 	char	*temp;
 
-	write(1, &c, 1);
-	if (*str)
-		len = ft_strlen(*str);
-	else
-		len = 0;
-	temp = (char *)malloc((len + n_sig + 1) * sizeof(char));
+	temp = (char *)malloc(sizeof(char) * len + 1);
 	if (!temp)
-	{
-		free(*str);
 		return ;
+	i = len;
+	j = 0;
+	while (i >= 0 && *str[j])
+	{
+		temp[j] = *str[j];
+		i--;
+		j++;
 	}
-	if (*str)
-		ft_strncpy(temp, *str, len);
 	temp[len] = c;
-	temp[len + 1] = '\0';
+	len++;
 	if (*str)
 		free(*str);
 	*str = temp;
-//	ft_printf("%s", temp);
 }
 
 static void	decode_signal(int signum, int *ready)
@@ -44,6 +43,7 @@ static void	decode_signal(int signum, int *ready)
 	static char				*message = NULL;
 	static unsigned char	bit = 0;
 	static unsigned char	c = 0;
+	static int	n = 0;
 
 	if (signum == SIGUSR2)
 	{
@@ -53,11 +53,19 @@ static void	decode_signal(int signum, int *ready)
 	i++;
 	if (i == 8)
 	{
-		add_char(c, &message, 1);
+		add_char(c, &message);
+		n++;
+		if (c == '\0')
+		{
+			write(1, message, n);
+			free(message);
+			message = NULL;
+			n = 0;
+			//return ;
+		}
 		i = 0;
 		c = 0;
 	}
-	ft_printf("decode: %s", message);
 	*ready = 1;
 }
 
@@ -77,8 +85,9 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 	}
 	if (server_ready == 1)
 	{
-		if (kill(pid, SIGUSR1) == -1)
-			write(1, "problema server", 15);
+		(void)pid;
+		//if (kill(pid, SIGUSR1) == -1)
+		//	write(1, "problema server", 15);
 	}
 }
 
