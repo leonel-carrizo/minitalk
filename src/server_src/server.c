@@ -6,41 +6,42 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/15 23:23:58 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/16 07:13:41 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
 
-static void	add_char(char c, char **str)
+static void	add_char(char c, char **str, int n)
 {
-	static int	len = 0;
-	int		i;
 	int		j;
-	char	*temp;
-
-	temp = (char *)malloc(sizeof(char) * len + 1);
+	int		i;
+	char		*temp;
+	char		*ptr;
+	
+	temp = (char *)malloc(sizeof(char) * (n + 1));
 	if (!temp)
 		return ;
-	i = len;
-	j = 0;
-	while (i >= 0 && *str[j])
+	if (!*str && n == 0)
 	{
-		temp[j] = *str[j];
-		i--;
-		j++;
+		temp[n] = c;
+		*str = temp;
+		return ;
 	}
-	temp[len] = c;
-	len++;
-	if (*str)
-		free(*str);
+	ptr = *str;
+	i = n + 1;
+	j = -1;
+	while (--i > 0 && ++j >= 0)
+		temp[j] = ptr[j];
+	temp[n] = c;
+	free(*str);
 	*str = temp;
 }
 
 static void	decode_signal(int signum, int *ready)
 {
 	static int				i = 0;
-	static char				*message = NULL;
+	static char				*message = 0;
 	static unsigned char	bit = 0;
 	static unsigned char	c = 0;
 	static int	n = 0;
@@ -53,7 +54,7 @@ static void	decode_signal(int signum, int *ready)
 	i++;
 	if (i == 8)
 	{
-		add_char(c, &message);
+		add_char(c, &message, n);
 		n++;
 		if (c == '\0')
 		{
@@ -61,12 +62,13 @@ static void	decode_signal(int signum, int *ready)
 			free(message);
 			message = NULL;
 			n = 0;
-			//return ;
 		}
 		i = 0;
 		c = 0;
 	}
 	*ready = 1;
+	if (n == 0 && i == 0)
+		*ready = 0;
 }
 
 /* Handle the signal recived and acts depending on which one is received */
@@ -85,9 +87,14 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 	}
 	if (server_ready == 1)
 	{
-		(void)pid;
-		//if (kill(pid, SIGUSR1) == -1)
-		//	write(1, "problema server", 15);
+		if (kill(pid, SIGUSR1) == -1)
+			write(1, "-problema server 1-", 19);
+	}
+	else if (server_ready == 0)
+	{
+		if (kill(pid, SIGUSR2) == -1)
+			write(1, "-problema server 2-", 19);
+		server_ready = 1;
 	}
 }
 

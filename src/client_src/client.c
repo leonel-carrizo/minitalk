@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/15 22:36:10 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/16 06:27:14 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,16 @@ static void	send_null(int pid)
 	{
 		if (kill(pid, SIGUSR1) == -1)
 			return ;
-		usleep(2000);
+		usleep(800);
 	}
 }
 
+/*
+01101000 -> 00010110 = h
+01101111 -> 11110110 = o
+01101100 -> 00110110 = l
+01100001 -> 10000110 = a
+*/
 /* convert the message to binary and send a signal to the server bit to bit */
 static void	sent_message(char *message, int pid)
 {
@@ -59,7 +65,7 @@ static void	sent_message(char *message, int pid)
 				kill(pid, SIGUSR1);
 			else if (nbr[j] == 1)
 				kill(pid, SIGUSR2);
-			usleep(1000);
+			usleep(800);
 		}
 		i++;
 		if (str[i] == '\0')
@@ -69,8 +75,10 @@ static void	sent_message(char *message, int pid)
 
 void	handler_sig_client(int signum)
 { 
-	(void)signum;
-	ft_printf("recibido, ");
+	if (signum == SIGUSR1)
+		(void)signum;
+	else
+		(void)signum;
 }
 
 int	main(int argc, char *argv[])
@@ -84,6 +92,7 @@ int	main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	signal(SIGUSR1, handler_sig_client);
+	signal(SIGUSR2, handler_sig_client);
 	pid = ft_atoi(argv[1]);
 	message = argv[2];
 	sent_message(message, pid);
