@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:05:04 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/06 17:21:13 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/16 22:42:08 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@
 # include <stdlib.h>
 
 void	handler_signal(int signum, siginfo_t *info, void *ucontext);
+void	error(const char *mess, char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/16 07:13:41 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/16 23:08:16 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ static void	add_char(char c, char **str, int n)
 	
 	temp = (char *)malloc(sizeof(char) * (n + 1));
 	if (!temp)
+	{
+		free(*str);
 		return ;
+	}
 	if (!*str && n == 0)
 	{
 		temp[n] = c;
@@ -38,10 +41,9 @@ static void	add_char(char c, char **str, int n)
 	*str = temp;
 }
 
-static void	decode_signal(int signum, int *ready)
+static void	decode_signal(int signum, int *ready, char **message)
 {
 	static int				i = 0;
-	static char				*message = 0;
 	static unsigned char	bit = 0;
 	static unsigned char	c = 0;
 	static int	n = 0;
@@ -54,12 +56,12 @@ static void	decode_signal(int signum, int *ready)
 	i++;
 	if (i == 8)
 	{
-		add_char(c, &message, n);
+		add_char(c, message, n);
 		n++;
 		if (c == '\0')
 		{
-			write(1, message, n);
-			free(message);
+			write(1, *message, n);
+			free(*message);
 			message = NULL;
 			n = 0;
 		}
@@ -76,6 +78,7 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 {
 	static int	pid = 0;
 	static	int	server_ready = 1;
+	static char			*message = 0;
 
 	(void)ucontext;
 	if (info->si_pid)
@@ -83,17 +86,17 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 	if (server_ready == 1)
 	{
 		server_ready = 0;
-		decode_signal(signum, &server_ready);
+		decode_signal(signum, &server_ready, &message);
 	}
 	if (server_ready == 1)
 	{
 		if (kill(pid, SIGUSR1) == -1)
-			write(1, "-problema server 1-", 19);
+			error("problem server", message);
 	}
 	else if (server_ready == 0)
 	{
 		if (kill(pid, SIGUSR2) == -1)
-			write(1, "-problema server 2-", 19);
+			error("problem server", message);
 		server_ready = 1;
 	}
 }

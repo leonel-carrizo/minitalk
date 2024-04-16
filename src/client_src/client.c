@@ -6,24 +6,11 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/16 06:27:14 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/16 23:14:54 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
-
-/* convert a char to binary number */
-static void	char_to_bin(char c, int nbr[])
-{
-	int	i;
-
-	i = 0;
-	while (i < 8)
-	{
-		nbr[i] = (c >> i) & 1;
-		i++;
-	}
-}
 
 /* send a NULL carcter represented as a binary number */
 static void	send_null(int pid)
@@ -31,54 +18,71 @@ static void	send_null(int pid)
 	int	i;
 
 	i = -1;
-	while (++i < 8)
+	if (++i < 8)
 	{
 		if (kill(pid, SIGUSR1) == -1)
 			return ;
-		usleep(800);
+	//	usleep(800);
 	}
+}
+
+/* convert a char to binary number */
+static unsigned int	bit(char c)
+{
+	static int	i = 0;
+	unsigned int	bit;
+
+	bit = ((c >> i) & 1);
+	i++;
+	return (bit);
 }
 
 /*
-01101000 -> 00010110 = h
-01101111 -> 11110110 = o
-01101100 -> 00110110 = l
-01100001 -> 10000110 = a
-*/
+01101000 -> 00010110 = h 01101111 -> 11110110 = o 01101100 -> 00110110 = l 
+01100001 -> 10000110 = a */
 /* convert the message to binary and send a signal to the server bit to bit */
-static void	sent_message(char *message, int pid)
+static int	sent_message(char *message, int pid)
 {
-	int			nbr[8];
-	int			j;
-	static int	i;
+	static	int			c_pid;
+	static int			b = 0;
 	static char	*str;
 
-	str = message;
-	i = 0;
-	while (str[i])
+	str = ft_strdup((const char *)message);
+	if (!str)
+		return (0);
+	c_pid = pid;
+	if (str[b])
 	{
-		char_to_bin(str[i], nbr);
-		j = -1;
-		while (++j < 8)
+		if (bit(str[b]) == 1)
 		{
-			if (nbr[j] == 0)
-				kill(pid, SIGUSR1);
-			else if (nbr[j] == 1)
-				kill(pid, SIGUSR2);
-			usleep(800);
+			if ((kill(c_pid, SIGUSR2) == -1))
+				error("Error sending signal", str); 
 		}
-		i++;
-		if (str[i] == '\0')
-			send_null(pid);
+		else if (kill(c_pid, SIGUSR1) == -1)
+				error("Error sending signal", str);
+		return (0);
+		b++;
 	}
+	if (str[b] == '\0')
+		send_null(c_pid);
+	free(str);
+	return (1);
 }
 
 void	handler_sig_client(int signum)
-{ 
+{
+	int	end;
+
+	end = 0;
 	if (signum == SIGUSR1)
-		(void)signum;
-	else
-		(void)signum;
+		end = sent_message(0, 0);
+	else if (signum == SIGUSR2)
+		write(1, "signal SIGUSR2 form sever", 25);
+	if (end)
+	{
+		ft_printf("Message delivered successfuly.\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 int	main(int argc, char *argv[])
@@ -96,7 +100,7 @@ int	main(int argc, char *argv[])
 	pid = ft_atoi(argv[1]);
 	message = argv[2];
 	sent_message(message, pid);
-	//	while (1)
-	//		pause();
+	while (1)
+		pause();
 	return (EXIT_SUCCESS);
 }
