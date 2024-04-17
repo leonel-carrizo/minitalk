@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:05:04 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/16 22:42:08 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/17 03:35:13 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 
 void	handler_signal(int signum, siginfo_t *info, void *ucontext);
-void	error(const char *mess, char *str);
+void	error(char *mess, char *str);
+unsigned int	get_bit(char c);
 
 #endif
