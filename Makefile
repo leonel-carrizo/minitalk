@@ -6,7 +6,7 @@
 #    By: lcarrizo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 13:05:39 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/09 15:20:34 by lcarrizo         ###    ###london.com     #
+#    Updated: 2024/04/17 04:00:54 by lcarrizo         ###    ###london.com     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,12 @@ NAME_CLIENT		= client
 LIBFT			= lib/libft/libft.a
 LIBFT_DIR		= lib/libft/
 INCLUDE			= include/
-UTILS_SRC		= utils/
+UTILS_DIR		= utils/
 SRC_DIR			= src/
 OBJ_DIR			= .obj/
+
+SRCS_UTILS		= $(wildcard $(UTILS_DIR)*.c)
+OBJ_UTILS		= $(addprefix $(OBJ_DIR)utils/, $(notdir $(SRCS_UTILS:.c=.o)))
 
 # for server #
 SRCS_SERVER		= $(wildcard $(SRC_DIR)server_src/*.c)
@@ -48,12 +51,12 @@ $(LIBFT):
 
 $(NAME):		$(NAME)
 
-$(NAME_SERVER):		$(OBJ_SERVER)
-			$(CC) $(CFLAGS) $(OBJ_SERVER) -o $(NAME_SERVER) $(LIBFT) -g
+$(NAME_SERVER):		$(OBJ_SERVER) $(OBJ_UTILS)
+			$(CC) $(CFLAGS) $(OBJ_SERVER) $(OBJ_UTILS) -o $(NAME_SERVER) $(LIBFT) -g
 			@echo "Server executable created!"
 
-$(NAME_CLIENT):		$(OBJ_CLIENT)
-			$(CC) $(CFLAGS) $(OBJ_CLIENT) -o $(NAME_CLIENT) $(LIBFT) -g
+$(NAME_CLIENT):		$(OBJ_CLIENT) $(OBJ_UTILS)
+			$(CC) $(CFLAGS) $(OBJ_CLIENT) $(OBJ_UTILS) -o $(NAME_CLIENT) $(LIBFT) -g
 			@echo "Client executable created!"
 
 $(OBJ_DIR)server/%.o:	$(SRC_DIR)server_src/%.c
@@ -66,10 +69,15 @@ $(OBJ_DIR)client/%.o:	$(SRC_DIR)client_src/%.c
 			@echo "Object Client Directory Created!"
 			$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR)utils/%.o:	$(UTILS_DIR)%.c
+			@mkdir -p $(OBJ_DIR)/utils
+			@echo "Object Utils Directory Created"
+			$(CC) $(CFLAGS) -c $< -o $@
+
 # create a program which can be debugged with gdb.
 debug:			$(LIBFT)
-			$(CC) $(CFLAGS) $(SRCS_SERVER) $(wildcard $(UTILS_SRC)/*.c) $(LIBFT) -o $(NAME_SERVER) -g
-			$(CC) $(CFLAGS) $(SRCS_CLIENT) $(wildcard $(UTILS_SRC)/*.c) $(LIBFT) -o $(NAME_CLIENT) -g
+			$(CC) $(CFLAGS) $(SRCS_SERVER) $(wildcard $(UTILS_DIR)/*.c) $(LIBFT) -o $(NAME_SERVER) -g
+			$(CC) $(CFLAGS) $(SRCS_CLIENT) $(wildcard $(UTILS_DIR)/*.c) $(LIBFT) -o $(NAME_CLIENT) -g
 			@echo "Debugables Created!"
 
 clean:		
