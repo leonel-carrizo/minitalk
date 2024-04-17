@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/16 23:08:16 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/17 05:59:48 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	add_char(char c, char **str, int n)
 	while (--i > 0 && ++j >= 0)
 		temp[j] = ptr[j];
 	temp[n] = c;
-	free(*str);
+	free(ptr);
 	*str = temp;
 }
 
@@ -53,8 +53,7 @@ static void	decode_signal(int signum, int *ready, char **message)
 		bit = 1 << i;
 		c += bit;
 	}
-	i++;
-	if (i == 8)
+	if (++i == 8)
 	{
 		add_char(c, message, n);
 		n++;
@@ -91,14 +90,13 @@ void	handler_signal(int signum, siginfo_t *info, void *ucontext)
 	if (server_ready == 1)
 	{
 		if (kill(pid, SIGUSR1) == -1)
-			error("problem server", message);
+		{
+			error("Server fail", message);
+			kill(SIGUSR2, pid);
+		}
 	}
 	else if (server_ready == 0)
-	{
-		if (kill(pid, SIGUSR2) == -1)
-			error("problem server", message);
-		server_ready = 1;
-	}
+		kill(pid, SIGUSR2);
 }
 
 int	main(void)
