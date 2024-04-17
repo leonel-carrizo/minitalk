@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/17 06:19:35 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/17 23:01:23 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,12 @@ static int	send_null(int pid, char *str)
 	if (++i <= 8)
 	{
 		if (kill(pid, SIGUSR1) == -1)
-			error("Error sending signal to server.", str);
+			error("Error sending signal to server.\n", str);
+		if (i == 8)
+		{
+			free(str);
+			return (0);
+		}
 		return (1);
 	}
 	return (0);
@@ -30,21 +35,23 @@ static int	send_null(int pid, char *str)
 
 static int	send_signal(char c, int pid, int *b)
 {
-	static int	i = -1;
+	static int	i = 0;
 	
-	if (++i == 8)
-	{
-		*b = *b + 1;
-		i = 0;
-	}
 	if ((c >> i) & 1)
 	{
 		if ((kill(pid, SIGUSR2) == -1))
 			return (1);
+		i++;
 		return (0);
 	}
 	else if (kill(pid, SIGUSR1) == -1)
 		return (1);
+	i++;
+	if (i == 8)
+	{
+		*b = *b + 1;
+		i = 0;
+	}
 	return (0);
 }
 
@@ -70,17 +77,15 @@ static int	send_bits(char *message, int pid)
 	if (str[b])
 	{
 		if (send_signal(str[b], c_pid, &b) == 1)
-			error("Error sending signal", str);
+			error("Error sending signal.\n", str);
 		return (0);
 	}
 	if (send_null(c_pid, str))
 		return (0);
-	free(str);
-	str = NULL;
 	return (1);
 }
 
-void	handler_sig_client(int signum)
+static void	handler_signal_client(int signum)
 {
 	int	end;
 
@@ -89,7 +94,7 @@ void	handler_sig_client(int signum)
 		end = send_bits(NULL, 0);
 	else if (signum == SIGUSR2 && end == 0)
 	{
-		write(2, "Comunication with the server lost\n", 34);
+		write(2, "Comunication with the server lost.\n", 35);
 		exit(EXIT_FAILURE);
 	}
 	else if (end && signum == SIGUSR2)
@@ -99,7 +104,7 @@ void	handler_sig_client(int signum)
 	}
 	if (end)
 	{
-		write(2, "algo raro paso\n", 15);
+		write(2, "something bad happened\n", 23);
 		exit(EXIT_FAILURE);
 	}
 
@@ -115,8 +120,8 @@ int	main(int argc, char *argv[])
 		ft_putstr_fd("Use: <SEVER PID> <STRING MESSAGE>\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	signal(SIGUSR1, handler_sig_client);
-	signal(SIGUSR2, handler_sig_client);
+	signal(SIGUSR1, handler_signal_client);
+	signal(SIGUSR2, handler_signal_client);
 	pid = ft_atoi(argv[1]);
 	message = argv[2];
 	send_bits(message, pid);
