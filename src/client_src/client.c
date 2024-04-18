@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 14:40:21 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:25:17 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	send_null(int pid, char *str, int *str_end)
 static int	send_signal(char c, int pid, int *b)
 {
 	static int	i = 0;
-	
+
 	if ((c >> i) & 1)
 	{
 		if ((kill(pid, SIGUSR2) == -1))
@@ -59,15 +59,12 @@ static int	send_signal(char c, int pid, int *b)
 	return (0);
 }
 
-/*
-01101000 -> 00010110 = h 01101111 -> 11110110 = o 01101100 -> 00110110 = l 
-01100001 -> 10000110 = a */
 /* convert the message to binary and send a signal to the server bit to bit */
 static int	send_bits(char *message, int pid, int *str_end)
 {
-	static	int			c_pid;
-	static int			b = 0;
-	static char	*str = NULL;
+	static int		c_pid;
+	static int		b = 0;
+	static char		*str = NULL;
 
 	if (message)
 		str = ft_strdup((const char *)message);
@@ -78,7 +75,7 @@ static int	send_bits(char *message, int pid, int *str_end)
 	if (str[b])
 	{
 		if (send_signal(str[b], c_pid, &b) == 1)
-			error("Error trying to connect: Check the PID.\n", str);
+			error("Connection Error: Check the PID.\n", str);
 		return (0);
 	}
 	if (!send_null(c_pid, str, str_end) && *str_end == 1)
@@ -109,7 +106,7 @@ int	main(int argc, char *argv[])
 	int			pid;
 	char		*message;
 
-	if (argc != 3)
+	if (argc != 3 || !ft_isnumeric (argv[1]))
 	{
 		ft_putstr_fd("Use: <SEVER PID> <STRING MESSAGE>\n", 2);
 		exit(EXIT_FAILURE);
