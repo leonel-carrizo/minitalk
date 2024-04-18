@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 21:08:46 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/13 19:41:55 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:16:47 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int			ft_toupper(int c);
 int			ft_tolower(int c);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
+int			ft_isnumeric(char *str);
 int			ft_isalnum(int c);
 int			ft_isascii(int c);
 int			ft_isprint(int c);
