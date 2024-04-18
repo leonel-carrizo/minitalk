@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/17 22:59:51 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:11:25 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ static void	decode_signal(int signum, int *ready, char **message)
 		n++;
 		if (c == '\0')
 		{
-			write(1, *message, n);
+			//write(1, *message, n);
+			ft_printf("%s\n", *message);
 			free(*message);
 			*message = NULL;
 			n = 0;
