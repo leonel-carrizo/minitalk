@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 15:49:13 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/18 22:01:48 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
 
 /* decodes each signal that arrives.
- * it obtains the entire message and prints it */
-static int	decode_signal(int signum, int pid, char **message)
+ * it obtains the entire message and prints it  */
+static void	decode_signal(int signum, int *ready, char **message)
 {
 	static int				i = 0;
 	static int				n = 0;
@@ -36,22 +36,39 @@ static int	decode_signal(int signum, int pid, char **message)
 		i = 0;
 		c = 0;
 	}
-	if (kill(pid, SIGUSR1) == -1)
-		return (0);
-	return (1);
+	*ready = 1;
+	if (n == 0 && i == 0)
+		*ready = 0;
 }
 
 /* Handle the signal recived and acts depending on which one is received */
 static void	handler_signal_server(int signum, siginfo_t *info, void *ucontext)
 {
 	static int	pid = 0;
+	static int	server_ready = 1;
 	static char	*message = NULL;
 
 	(void)ucontext;
 	if (info->si_pid)
 		pid = info->si_pid;
-	if (!decode_signal(signum, pid, &message))
-		error("Server Communication Fail", message);
+	if (server_ready == 1)
+	{
+		server_ready = 0;
+		decode_signal(signum, &server_ready, &message);
+	}
+	if (server_ready == 1)
+	{
+		if (kill(pid, SIGUSR1) == -1)
+		{
+			error("Server communication with the client failed", message);
+			kill(SIGUSR2, pid);
+		}
+	}
+	else if (server_ready == 0)
+	{
+		kill(pid, SIGUSR2);
+		server_ready = 1;
+	}
 }
 
 int	main(void)

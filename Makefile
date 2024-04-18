@@ -6,7 +6,7 @@
 #    By: lcarrizo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 13:05:39 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/17 04:00:54 by lcarrizo         ###    ###london.com     #
+#    Updated: 2024/04/18 21:40:16 by lcarrizo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,14 @@
 NAME			=
 NAME_SERVER		= server
 NAME_CLIENT		= client
+NAME_SERVERB		= server
+NAME_CLIENTB		= client
 LIBFT			= lib/libft/libft.a
 LIBFT_DIR		= lib/libft/
 INCLUDE			= include/
 UTILS_DIR		= utils/
 SRC_DIR			= src/
-OBJ_DIR			= .obj/
+OBJ_DIR			= obj/
 
 SRCS_UTILS		= $(wildcard $(UTILS_DIR)*.c)
 OBJ_UTILS		= $(addprefix $(OBJ_DIR)utils/, $(notdir $(SRCS_UTILS:.c=.o)))
@@ -33,6 +35,12 @@ OBJ_SERVER		= $(addprefix $(OBJ_DIR)server/, $(notdir $(SRCS_SERVER:.c=.o)))
 SRCS_CLIENT		= $(wildcard $(SRC_DIR)client_src/*.c)
 OBJ_CLIENT		= $(addprefix $(OBJ_DIR)client/, $(notdir $(SRCS_CLIENT:.c=.o)))
 
+# for bonus
+SRCS_SERVERB		= $(SRC_DIR)bonus/server_bonus.c
+OBJ_SERVERB		= $(OBJ_DIR)bonus/server_bonus.o
+SRCS_CLIENTB		= $(SRC_DIR)bonus/client_bonus.c
+OBJ_CLIENTB		= $(OBJ_DIR)bonus/client_bonus.o
+
 #############################    COMMANDS   ##################################
 
 CC			= cc
@@ -42,11 +50,10 @@ CFLAGS			= -Wall -Werror -Wextra -I$(INCLUDE)
 ################################    RULES    ###################################
 
 .SILENT:
-# .SILENT:		$(NAME) $(OBJ_SERVER) $(OBJ_CLIENT) clean fclean
 
-all:			$(LIBFT) $(NAME_SERVER) $(NAME_CLIENT) 
+all:			$(LIBFT) $(NAME_SERVER) $(NAME_CLIENT)
 
-$(LIBFT):	
+$(LIBFT):
 			@make -C $(LIBFT_DIR)
 
 $(NAME):		$(NAME)
@@ -74,6 +81,22 @@ $(OBJ_DIR)utils/%.o:	$(UTILS_DIR)%.c
 			@echo "Object Utils Directory Created"
 			$(CC) $(CFLAGS) -c $< -o $@
 
+bonus:
+			@make $(NAME_SERVERB) $(NAME_CLIENTB)
+
+$(NAME_SERVERB):	$(OBJ_SERVERB) $(OBJ_UTILS) $(LIBFT)
+			$(CC) $(CFLAGS) $(OBJ_SERVERB) $(OBJ_UTILS) -o $(NAME_SERVER) $(LIBFT) -g
+			@echo "Server BONUS executable created!"
+
+$(NAME_CLIENTB):	$(OBJ_CLIENTB) $(OBJ_UTILS) $(LIBFT)
+			$(CC) $(CFLAGS) $(OBJ_CLIENTB) $(OBJ_UTILS) -o $(NAME_CLIENT) $(LIBFT) -g
+			@echo "Client BONUS executable created!"
+
+$(OBJ_DIR)bonus/%.o:	$(SRC_DIR)bonus/%.c
+			@mkdir -p $(OBJ_DIR)/bonus
+			@echo "Object BONUS Created!"
+			$(CC) $(CFLAGS) -c $< -o $@
+
 # create a program which can be debugged with gdb.
 debug:			$(LIBFT)
 			$(CC) $(CFLAGS) $(SRCS_SERVER) $(wildcard $(UTILS_DIR)/*.c) $(LIBFT) -o $(NAME_SERVER) -g
@@ -86,12 +109,11 @@ clean:
 			@echo "** clean minitalk done!**"
 			
 fclean:			clean
-			$(RM) $(NAME_SERVER) $(NAME_CLIENT)
+			$(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVERB) $(NAME_CLIENTB)
 			$(RM) ./libft.a
 			@make -C $(LIBFT_DIR) fclean
 			@echo "** full clean minitalk done!**"
 
 re:			fclean all
 
-.PHONY: all clean fclean re
-
+.PHONY: all clean fclean re bonus
