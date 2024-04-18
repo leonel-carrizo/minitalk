@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 15:25:17 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:43:55 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static int	send_null(int pid, char *str, int *str_end)
 	return (0);
 }
 
+/* Send a signal for each bit of char c to the PID. 
+ * When it has sent 1 byte, reset the number of bits sent. */
 static int	send_signal(char c, int pid, int *b)
 {
 	static int	i = 0;
@@ -83,6 +85,7 @@ static int	send_bits(char *message, int pid, int *str_end)
 	return (0);
 }
 
+/* Establishes how the signals that arrive as feedback from the server should be processed */
 static void	handler_signal_client(int signum)
 {
 	static int	str_end = 0;
