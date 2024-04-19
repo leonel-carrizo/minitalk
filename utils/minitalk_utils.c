@@ -6,7 +6,7 @@
 /*   By: lcarrizo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 21:16:26 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 15:29:13 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:45:04 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,17 @@ unsigned int	get_bit(char c)
 	bit = ((c >> i) & 1);
 	i++;
 	return (bit);
+}
+
+/* convert a char to binary number */
+void	char_to_bin(char c, int nbr[])
+{
+	int	i;
+
+	i = 0;
+	while (i < 8)
+	{
+		nbr[i] = (c >> i) & 1;
+		i++;
+	}
 }

@@ -6,24 +6,11 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 15:57:49 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:53:44 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
-
-/* convert a char to binary number */
-static void	char_to_bin(char c, int nbr[])
-{
-	int	i;
-
-	i = 0;
-	while (i < 8)
-	{
-		nbr[i] = (c >> i) & 1;
-		i++;
-	}
-}
 
 /* send a NULL carcter represented as a binary number */
 static void	send_null(int pid)
@@ -56,9 +43,15 @@ static void	sent_message(char *message, int pid)
 		while (++j < 8)
 		{
 			if (nbr[j] == 0)
-				kill(pid, SIGUSR1);
+			{
+				if (kill(pid, SIGUSR1) == -1)
+					error("Error: Check the PID", NULL);
+			}
 			else if (nbr[j] == 1)
-				kill(pid, SIGUSR2);
+			{
+				if (kill(pid, SIGUSR2) == -1)
+					error("Error: Check the PID", NULL);
+			}
 			usleep(1500);
 		}
 		i++;
@@ -68,7 +61,7 @@ static void	sent_message(char *message, int pid)
 }
 
 void	handler_sig_client(int signum)
-{ 
+{
 	if (signum == SIGUSR1)
 		(void)signum;
 	else
@@ -80,7 +73,7 @@ int	main(int argc, char *argv[])
 	int			pid;
 	char		*message;
 
-	if (argc != 3)
+	if (argc != 3 || !ft_isnumeric(argv[1]))
 	{
 		ft_putstr_fd("Use: <SEVER PID> <STRING MESSAGE>\n", 2);
 		exit(EXIT_FAILURE);

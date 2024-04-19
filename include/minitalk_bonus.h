@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:05:04 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 15:55:53 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:47:03 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 void			error(char *mess, char *str);
 void			add_char(char c, char **str, int n);
+void			char_to_bin(char c, int nbr[]);
 unsigned int	get_bit(char c);
 
 #endif
