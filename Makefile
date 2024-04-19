@@ -6,7 +6,7 @@
 #    By: lcarrizo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 13:05:39 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/18 21:40:16 by lcarrizo         ###   ########.fr        #
+#    Updated: 2024/04/19 12:11:28 by lcarrizo         ###    ###london.com     #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,6 @@
 NAME			=
 NAME_SERVER		= server
 NAME_CLIENT		= client
-NAME_SERVERB		= server
-NAME_CLIENTB		= client
 LIBFT			= lib/libft/libft.a
 LIBFT_DIR		= lib/libft/
 INCLUDE			= include/
@@ -54,16 +52,16 @@ CFLAGS			= -Wall -Werror -Wextra -I$(INCLUDE)
 all:			$(LIBFT) $(NAME_SERVER) $(NAME_CLIENT)
 
 $(LIBFT):
-			@make -C $(LIBFT_DIR)
+			@make -s -C $(LIBFT_DIR)
 
-$(NAME):		$(NAME)
+$(NAME):		$(NAME_SERVER) $(NAME_CLIENT)
 
 $(NAME_SERVER):		$(OBJ_SERVER) $(OBJ_UTILS)
-			$(CC) $(CFLAGS) $(OBJ_SERVER) $(OBJ_UTILS) -o $(NAME_SERVER) $(LIBFT) -g
+			$(CC) $(CFLAGS) $(OBJ_SERVER) $(OBJ_UTILS) $(LIBFT) -o server  -g
 			@echo "Server executable created!"
 
 $(NAME_CLIENT):		$(OBJ_CLIENT) $(OBJ_UTILS)
-			$(CC) $(CFLAGS) $(OBJ_CLIENT) $(OBJ_UTILS) -o $(NAME_CLIENT) $(LIBFT) -g
+			$(CC) $(CFLAGS) $(OBJ_CLIENT) $(OBJ_UTILS) $(LIBFT) -o client -g
 			@echo "Client executable created!"
 
 $(OBJ_DIR)server/%.o:	$(SRC_DIR)server_src/%.c
@@ -81,15 +79,10 @@ $(OBJ_DIR)utils/%.o:	$(UTILS_DIR)%.c
 			@echo "Object Utils Directory Created"
 			$(CC) $(CFLAGS) -c $< -o $@
 
-bonus:
-			@make $(NAME_SERVERB) $(NAME_CLIENTB)
-
-$(NAME_SERVERB):	$(OBJ_SERVERB) $(OBJ_UTILS) $(LIBFT)
-			$(CC) $(CFLAGS) $(OBJ_SERVERB) $(OBJ_UTILS) -o $(NAME_SERVER) $(LIBFT) -g
+bonus:			$(LIBFT) $(OBJ_SERVERB) $(OBJ_CLIENTB) $(OBJ_UTILS)
+			$(CC) $(CFLAGS) $(OBJ_SERVERB) $(OBJ_UTILS) $(LIBFT) -o $(NAME_SERVER)
 			@echo "Server BONUS executable created!"
-
-$(NAME_CLIENTB):	$(OBJ_CLIENTB) $(OBJ_UTILS) $(LIBFT)
-			$(CC) $(CFLAGS) $(OBJ_CLIENTB) $(OBJ_UTILS) -o $(NAME_CLIENT) $(LIBFT) -g
+			$(CC) $(CFLAGS) $(OBJ_CLIENTB) $(OBJ_UTILS) $(LIBFT) -o $(NAME_CLIENT)
 			@echo "Client BONUS executable created!"
 
 $(OBJ_DIR)bonus/%.o:	$(SRC_DIR)bonus/%.c
@@ -97,7 +90,7 @@ $(OBJ_DIR)bonus/%.o:	$(SRC_DIR)bonus/%.c
 			@echo "Object BONUS Created!"
 			$(CC) $(CFLAGS) -c $< -o $@
 
-# create a program which can be debugged with gdb.
+# create executables which can be debugged with gdb.
 debug:			$(LIBFT)
 			$(CC) $(CFLAGS) $(SRCS_SERVER) $(wildcard $(UTILS_DIR)/*.c) $(LIBFT) -o $(NAME_SERVER) -g
 			$(CC) $(CFLAGS) $(SRCS_CLIENT) $(wildcard $(UTILS_DIR)/*.c) $(LIBFT) -o $(NAME_CLIENT) -g
@@ -105,13 +98,14 @@ debug:			$(LIBFT)
 
 clean:		
 			$(RM) $(OBJ_DIR)
-			@make -C $(LIBFT_DIR) clean
+			@make -s -C $(LIBFT_DIR) clean
 			@echo "** clean minitalk done!**"
 			
 fclean:			clean
-			$(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVERB) $(NAME_CLIENTB)
+			# $(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVERB) $(NAME_CLIENTB)
+			$(RM) server client 
 			$(RM) ./libft.a
-			@make -C $(LIBFT_DIR) fclean
+			@make -s -C $(LIBFT_DIR) fclean
 			@echo "** full clean minitalk done!**"
 
 re:			fclean all
