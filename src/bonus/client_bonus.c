@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 22:01:41 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/19 18:30:39 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,12 @@ static void	handler_signal_client(int signum)
 		str_end = send_bits(NULL, 0, &str_end);
 	else if (signum == SIGUSR2 && str_end == 0)
 	{
-		write(2, "Comunication with the server lost.\n", 35);
+		write(2, "\nComunication with the server lost.\n", 36);
 		exit(EXIT_FAILURE);
 	}
 	else if (signum == SIGUSR2 && str_end)
 	{
-		write(1, "Message delivered successfuly.\n", 31);
+		write(1, "\nMessage delivered successfuly.\n", 32);
 		exit(EXIT_SUCCESS);
 	}
 }

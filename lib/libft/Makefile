@@ -6,7 +6,7 @@
 #    By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/28 03:19:48 by lcarrizo          #+#    #+#              #
-#    Updated: 2024/04/09 15:21:13 by lcarrizo         ###    ###london.com     #
+#    Updated: 2024/04/19 18:32:13 by lcarrizo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME		= libft.a
 HEADER		= -I../include
 SRC_DIR		= ./
-OBJ_DIR		= obj/
+OBJ_DIR		= .obj/
 SRC		= $(wildcard $(SRC_DIR)*c) $(wildcard $(SRC_DIR)ft_printf/*c) \
 		  $(wildcard $(SRC_DIR)get_next_line/*c)
 OBJ		= $(addprefix $(OBJ_DIR), $(notdir $(SRC:.c=.o)))

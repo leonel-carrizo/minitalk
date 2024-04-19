@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 22:01:48 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/19 18:42:10 by lcarrizo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,14 @@ static void	handler_signal_server(int signum, siginfo_t *info, void *ucontext)
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	pid_t				pid;
 	struct sigaction	act;
 	sigset_t			sa_mask;
 
+	if (argc != 1 || argv[1])
+		error("Use: < ./server >\n", NULL);
 	act.sa_handler = 0;
 	sigemptyset(&sa_mask);
 	sigaddset(&sa_mask, SIGINT);
