@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 20:54:17 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/19 12:53:44 by lcarrizo         ###    ###london.com    */
+/*   Updated: 2024/04/19 13:49:37 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,37 +29,30 @@ static void	send_null(int pid)
 /* convert the message to binary and send a signal to the server bit to bit */
 static void	sent_message(char *message, int pid)
 {
-	int			nbr[8];
 	int			j;
-	static int	i;
-	static char	*str;
+	static int	i = -1;
 
-	str = message;
-	i = 0;
-	while (str[i])
+	while (message[++i])
 	{
-		char_to_bin(str[i], nbr);
 		j = -1;
 		while (++j < 8)
 		{
-			if (nbr[j] == 0)
-			{
-				if (kill(pid, SIGUSR1) == -1)
-					error("Error: Check the PID", NULL);
-			}
-			else if (nbr[j] == 1)
+			if ((message[i] >> j) & 1)
 			{
 				if (kill(pid, SIGUSR2) == -1)
-					error("Error: Check the PID", NULL);
+					error("Error: Check the PID\n", NULL);
 			}
+			else if (kill(pid, SIGUSR1) == -1)
+				error("Error: Check the PID\n", NULL);
 			usleep(1500);
 		}
-		i++;
-		if (str[i] == '\0')
-			send_null(pid);
 	}
+	if (message[i] == '\0')
+		send_null(pid);
 }
 
+/* Handle the signal recived and acts depending on which one is received
+In this case are used to to synchronize the usleep with the incoming signals */
 void	handler_sig_client(int signum)
 {
 	if (signum == SIGUSR1)

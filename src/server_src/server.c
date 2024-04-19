@@ -6,7 +6,7 @@
 /*   By: lcarrizo <lcarrizo@student.42london.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:54:37 by lcarrizo          #+#    #+#             */
-/*   Updated: 2024/04/18 15:49:13 by lcarrizo         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:42:25 by lcarrizo         ###    ###london.com    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	handler_signal_server(int signum, siginfo_t *info, void *ucontext)
 	(void)ucontext;
 	if (info->si_pid)
 		pid = info->si_pid;
-	if (!decode_signal(signum, pid, &message))
+	if (!decode_signal(signum, pid, &message) && !pid)
 		error("Server Communication Fail", message);
 }
 
